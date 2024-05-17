@@ -1,7 +1,9 @@
-//write azure openAI controller
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 using Azure.AI.OpenAI;
+using Azure;
+//using Azure.AI.OpenAI.Models;
+using System;
 
 namespace MultiChat.API.Controllers
 {
@@ -17,9 +19,9 @@ namespace MultiChat.API.Controllers
         [Route("generateresponse")]
         public async Task<IActionResult> GenerateResponse([FromBody] string prompt)
         {
-            var client = new OpenAIClient(new Uri(endpoint), new AzureKeyCredential(key));
+            var client = new OpenAIClient(new Uri(endpoint), new AzureKeyCredential(apiKey));
 
-            var ChatComplitionOptions = new ChatCompletionOptions
+            var chatCompletionsOptions = new ChatCompletionsOptions
             {
                 DeploymentName  = modelId,
                 Temperature = (float)0.5,
@@ -30,9 +32,9 @@ namespace MultiChat.API.Controllers
             };
 
             chatCompletionsOptions.Messages.Add(new ChatRequestUserMessage(prompt));
-            var response = await client.Chat.CompletionAsync(chatCompletionsOptions);
+            var response = await client.GetChatCompletionsAsync(chatCompletionsOptions);
 
-            return response.Value.Choices[0].Message.Content;
+            return Ok(response.Value.Choices[0].Message.Content);
 
         }
     }
