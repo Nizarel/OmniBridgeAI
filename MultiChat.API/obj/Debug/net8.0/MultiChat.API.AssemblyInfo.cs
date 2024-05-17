@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("MultiChat.API")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+7bb0fde8ed4d3b5b39ab0bbd909f79a3f6d1a58f")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+6d481a2f49eec9a2521c21b0dcf551a5ed7d86d4")]
 [assembly: System.Reflection.AssemblyProductAttribute("MultiChat.API")]
 [assembly: System.Reflection.AssemblyTitleAttribute("MultiChat.API")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

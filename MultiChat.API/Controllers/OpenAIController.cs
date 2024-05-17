@@ -11,9 +11,9 @@ namespace MultiChat.API.Controllers
     [Route("api/[controller]")]
     public class OpenAIController : ControllerBase
     {
-        const string apiKey = "API_KEY";
-        const string endpoint = "ENDPOINT";
-        const string modelId = "MODEL_ID";
+        private static readonly string apiKey = Environment.GetEnvironmentVariable("API_KEY");
+        private static readonly string endpoint = Environment.GetEnvironmentVariable("ENDPOINT_URL");
+        private static readonly string modelId = Environment.GetEnvironmentVariable("ENDPOINT_URL");
 
         [HttpPost]
         [Route("generateresponse")]
