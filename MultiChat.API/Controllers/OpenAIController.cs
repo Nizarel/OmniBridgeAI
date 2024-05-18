@@ -1,14 +1,13 @@
 using Microsoft.AspNetCore.Mvc;
-using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 using Azure.AI.OpenAI;
 using Azure;
-//using Azure.AI.OpenAI.Models;
-using System;
+
 
 namespace MultiChat.API.Controllers
 {
     [ApiController]
-    [Route("api/[controller]")]
+    [Route("[controller]")]
     public class OpenAIController : ControllerBase
     {
         private static readonly string apiKey = Environment.GetEnvironmentVariable("API_KEY");
