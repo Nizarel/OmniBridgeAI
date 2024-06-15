@@ -1,25 +1,28 @@
 {
   "format": 1,
   "restore": {
-    "/workspaces/OmniBridgeAI/MultiChat.API/MultiChat.API.csproj": {}
+    "C:\\Users\\nizare\\Documents\\GitHub\\OmniBridgeAI\\MultiChat.API\\MultiChat.API.csproj": {}
   },
   "projects": {
-    "/workspaces/OmniBridgeAI/MultiChat.API/MultiChat.API.csproj": {
+    "C:\\Users\\nizare\\Documents\\GitHub\\OmniBridgeAI\\MultiChat.API\\MultiChat.API.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/workspaces/OmniBridgeAI/MultiChat.API/MultiChat.API.csproj",
+        "projectUniqueName": "C:\\Users\\nizare\\Documents\\GitHub\\OmniBridgeAI\\MultiChat.API\\MultiChat.API.csproj",
         "projectName": "MultiChat.API",
-        "projectPath": "/workspaces/OmniBridgeAI/MultiChat.API/MultiChat.API.csproj",
-        "packagesPath": "/home/codespace/.nuget/packages/",
-        "outputPath": "/workspaces/OmniBridgeAI/MultiChat.API/obj/",
+        "projectPath": "C:\\Users\\nizare\\Documents\\GitHub\\OmniBridgeAI\\MultiChat.API\\MultiChat.API.csproj",
+        "packagesPath": "C:\\Users\\nizare\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\nizare\\Documents\\GitHub\\OmniBridgeAI\\MultiChat.API\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "/home/codespace/.nuget/NuGet/NuGet.Config"
+          "C:\\Users\\nizare\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
           "net8.0"
         ],
         "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "C:\\Program Files\\dotnet\\library-packs": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
@@ -47,9 +50,33 @@
               "target": "Package",
               "version": "[1.0.0-beta.17, )"
             },
+            "Azure.Identity": {
+              "target": "Package",
+              "version": "[1.11.4, )"
+            },
+            "Humanizer": {
+              "target": "Package",
+              "version": "[2.*, )"
+            },
+            "Microsoft.Azure.Cosmos": {
+              "target": "Package",
+              "version": "[3.41.0-preview.0, )"
+            },
+            "Microsoft.ML.Tokenizers": {
+              "target": "Package",
+              "version": "[0.22.0-preview.24179.1, )"
+            },
+            "Microsoft.SemanticKernel": {
+              "target": "Package",
+              "version": "[1.12.0, )"
+            },
+            "Microsoft.SemanticKernel.Plugins.Core": {
+              "target": "Package",
+              "version": "[1.12.0-alpha, )"
+            },
             "Swashbuckle.AspNetCore": {
               "target": "Package",
-              "version": "[6.4.0, )"
+              "version": "[6.6.2, )"
             }
           },
           "imports": [
@@ -71,7 +98,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "/usr/share/dotnet/sdk/8.0.203/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.301/PortableRuntimeIdentifierGraph.json"
         }
       }
     }
