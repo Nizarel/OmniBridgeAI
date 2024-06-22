@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using MultiChat.API.Models;
+using MultiChat.API.Options;
 using MultiChat.API.Services;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -118,6 +120,41 @@ namespace MultiChat.API.Controllers
         {
             var message = await _chatService.GetChatCompletionAsync(sessionId, promptText);
             return Ok(message);
+        }
+
+
+        [HttpPost("analyze")]
+        public async Task<ActionResult<Message>> AnalyzeImage([FromForm] ChatRequest request)
+        {
+            if (request.imageFile == null || request.imageFile.Length == 0)
+            {
+                return BadRequest("Image file is required.");
+            }
+
+            try
+            {
+                byte[] imageData;
+                using (var ms = new MemoryStream())
+                {
+                    await request.imageFile.CopyToAsync(ms);
+                    imageData = ms.ToArray();
+                }
+
+                // Convert image data to base64 string  
+                string base64Image = Convert.ToBase64String(imageData);
+
+                // Prepare the request to Azure OpenAI GPT-4  
+                // var prompt = $"{request.PromptText}: {base64Image}";
+
+                var message = await _chatService.GetImage2TextCompletionAsync(request.SessionId, request.PromptText, base64Image);
+                      
+
+                return Ok(message);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
         }
 
         /// <summary>

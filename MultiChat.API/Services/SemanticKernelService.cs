@@ -3,6 +3,7 @@ using Microsoft.SemanticKernel.ChatCompletion;
 using MultiChat.API.Models;
 using Microsoft.SemanticKernel.Embeddings;
 using Azure.AI.OpenAI;
+using Microsoft.AspNetCore.Connections;
 
 #pragma warning disable SKEXP0010, SKEXP0001
 
@@ -67,6 +68,60 @@ namespace MultiChat.API.Services
                 ExtensionData = new Dictionary<string, object>()
                     {
                         { "Temperature", 0.2 },
+                        { "TopP", 0.7 },
+                        { "MaxTokens", 1000  }
+                    }
+            };
+
+
+            var result = await kernel.GetRequiredService<IChatCompletionService>().GetChatMessageContentAsync(skChatHistory, settings);
+
+            CompletionsUsage completionUsage = (CompletionsUsage)result.Metadata!["Usage"]!;
+
+            string completion = result.Items[0].ToString()!;
+            int tokens = completionUsage.CompletionTokens;
+
+            return (completion, tokens);
+
+        }
+        /// Generates a completion using a user prompt with chat history to Semantic Kernel and returns the response.
+        public async Task<(string completion, int tokens)> GetImage2TextAsync(string sessionId, List<Message> chatHistory, string b64imgr)
+        {
+
+            var skChatHistory = new ChatHistory();
+            skChatHistory.AddSystemMessage(_systemPrompt);
+
+            foreach (var message in chatHistory)
+            {
+                var collectionItems = new ChatMessageContentItemCollection
+                {
+                    new TextContent(message.Prompt),
+                    new ImageContent(new Uri("data:image/jpeg;" + $"base64,{b64imgr}"))
+
+                };
+                
+                skChatHistory.AddUserMessage(collectionItems);
+                
+                if (message.Completion != string.Empty)
+                    skChatHistory.AddAssistantMessage(message.Completion);
+            }
+
+            // analize image
+/*            var collectionItems = new ChatMessageContentItemCollection
+            {
+                new TextContent(Caption),
+                new ImageContent(new Uri("data:image/jpeg;" + $"base64,{b64imgr}"))
+
+            };
+
+            skChatHistory.AddUserMessage(collectionItems);*/
+
+
+            PromptExecutionSettings settings = new()
+            {
+                ExtensionData = new Dictionary<string, object>()
+                    {
+                        { "Temperature", 0.5 },
                         { "TopP", 0.7 },
                         { "MaxTokens", 1000  }
                     }

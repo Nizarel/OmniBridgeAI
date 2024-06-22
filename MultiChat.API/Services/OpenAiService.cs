@@ -126,4 +126,42 @@ public class OpenAiService
 
         return embedding;
     }
+
+    public async Task<(string completion, int tokens)> GetImage2TextAsync(string sessionId, List<Message> conversation, Stream jpegImageStream, string rawImageUri)
+    {
+
+        //Serialize the conversation to a string to send to OpenAI
+        string conversationString = string.Join(Environment.NewLine, conversation.Select(m => m.Prompt + " " + m.Completion));
+
+        ChatCompletionsOptions options = new()
+        {
+            DeploymentName = _completionDeploymentName,
+            Messages =
+            {
+                new ChatRequestSystemMessage(_systemPrompt),
+                new ChatRequestUserMessage(
+                        new ChatMessageTextContentItem(conversationString),
+                        new ChatMessageImageContentItem(new Uri(rawImageUri)),
+                        new ChatMessageImageContentItem(jpegImageStream, "image/jpg", ChatMessageImageDetailLevel.Low)),
+
+                            },
+            User = sessionId,
+            MaxTokens = 1000,
+            Temperature = 0.2f,
+            NucleusSamplingFactor = 0.7f,
+            FrequencyPenalty = 0,
+            PresencePenalty = 0
+        };
+
+        Response<ChatCompletions> completionsResponse = await _client.GetChatCompletionsAsync(options);
+
+        ChatCompletions completions = completionsResponse.Value;
+
+        string completion = completions.Choices[0].Message.Content;
+        int tokens = completions.Usage.CompletionTokens;
+
+
+        return (completion, tokens);
+    }
+
 }
