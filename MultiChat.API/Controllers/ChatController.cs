@@ -1,10 +1,13 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Azure.AI.OpenAI;
+using Microsoft.AspNetCore.Mvc;
 using MultiChat.API.Models;
-using MultiChat.API.Options;
 using MultiChat.API.Services;
-using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
+using SixLabors.ImageSharp;
+using SixLabors.ImageSharp.Formats.Jpeg;
+using SixLabors.ImageSharp.Processing;
+using SkiaSharp;
+
+
 
 namespace MultiChat.API.Controllers
 {
@@ -123,6 +126,31 @@ namespace MultiChat.API.Controllers
         }
 
 
+        // ...
+
+
+        [HttpPost("image")]
+        public async Task<IActionResult> ImageCompletion([FromBody] imgChatRequest request)
+        {
+            if (request.imageFile == null)
+            {
+                return BadRequest("Image file is required.");
+            }
+
+            try
+            {
+                var imageContent = new BinaryData(ConvertImageToReadOnlyMemory(request.imageFile));
+                var base64Image = Convert.ToBase64String(imageContent.ToArray());
+                var message = await _chatService.GetImage2TextCompletionAsync(request.SessionId, request.PromptText, base64Image);
+
+                return Ok(message);
+            }
+            catch (System.Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex}");
+            }
+        }
+
         [HttpPost("analyze")]
         public async Task<ActionResult<Message>> AnalyzeImage([FromForm] ChatRequest request)
         {
@@ -133,6 +161,17 @@ namespace MultiChat.API.Controllers
 
             try
             {
+                using var stream = request.imageFile.OpenReadStream();
+                using var skData = SKData.Create(stream);
+                using var skCodec = SKCodec.Create(skData);
+                using var originalBitmap = SKBitmap.Decode(skCodec);
+
+                SKImageInfo resizedInfo = new(640, 480);
+                using var resizedBitmap = originalBitmap.Resize(resizedInfo, SKFilterQuality.High);
+                using var image = SKImage.FromBitmap(resizedBitmap);
+                using var data = image.Encode(SKEncodedImageFormat.Jpeg, 75);
+                byte[] imageArray = data.ToArray();
+
                 byte[] imageData;
                 using (var ms = new MemoryStream())
                 {
@@ -141,13 +180,13 @@ namespace MultiChat.API.Controllers
                 }
 
                 // Convert image data to base64 string  
-                string base64Image = Convert.ToBase64String(imageData);
+                string base64Image = Convert.ToBase64String(imageArray);
 
                 // Prepare the request to Azure OpenAI GPT-4  
                 // var prompt = $"{request.PromptText}: {base64Image}";
 
                 var message = await _chatService.GetImage2TextCompletionAsync(request.SessionId, request.PromptText, base64Image);
-                      
+
 
                 return Ok(message);
             }
@@ -179,6 +218,22 @@ namespace MultiChat.API.Controllers
         {
             var newName = await _chatService.SummarizeChatSessionNameAsync(sessionId);
             return Ok(newName);
+        }
+
+        private static ReadOnlyMemory<byte> ConvertImageToReadOnlyMemory(Image image)
+        {
+            using var memoryStream = new MemoryStream();
+            // Ensure the image is in the correct format (e.g., RGB)
+            image.Mutate(x => x.AutoOrient());
+
+            // Save the image to the MemoryStream, using JPEG format
+            image.SaveAsJpeg(memoryStream, new JpegEncoder());
+
+            // Optionally, reset the position of the MemoryStream to the beginning
+            memoryStream.Position = 0;
+
+            // Convert the MemoryStream's buffer to ReadOnlyMemory<byte>
+            return new ReadOnlyMemory<byte>(memoryStream.ToArray());
         }
     }
 }

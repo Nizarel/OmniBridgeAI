@@ -106,16 +106,6 @@ namespace MultiChat.API.Services
                     skChatHistory.AddAssistantMessage(message.Completion);
             }
 
-            // analize image
-/*            var collectionItems = new ChatMessageContentItemCollection
-            {
-                new TextContent(Caption),
-                new ImageContent(new Uri("data:image/jpeg;" + $"base64,{b64imgr}"))
-
-            };
-
-            skChatHistory.AddUserMessage(collectionItems);*/
-
 
             PromptExecutionSettings settings = new()
             {
