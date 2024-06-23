@@ -84,7 +84,7 @@ namespace MultiChat.API.Services
             return (completion, tokens);
 
         }
-        /// Generates a completion using a user prompt with chat history to Semantic Kernel and returns the response.
+        /// Generates Image to Text using a user prompt with chat history to Semantic Kernel and returns the response.
         public async Task<(string completion, int tokens)> GetImage2TextAsync(string sessionId, List<Message> chatHistory, string b64imgr)
         {
 
