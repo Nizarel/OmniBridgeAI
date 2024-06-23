@@ -79,9 +79,7 @@ public class ChatService
         await _cosmosDbService.DeleteSessionAndMessagesAsync(sessionId);
     }
 
-    /// <summary>
     /// Get a completion for a user prompt from Azure OpenAi Service
-    /// </summary>
     public async Task<Message> GetChatCompletionAsync(string? sessionId, string promptText)
     {
 
@@ -170,9 +168,8 @@ public class ChatService
         return chatMessage;
     }
 
-    /// <summary>
+
     /// Get the context window for this conversation. This is used in cache search as well as generating completions
-    /// </summary>
     private async Task<List<Message>> GetChatSessionContextWindow(string sessionId)
     {
 
@@ -200,9 +197,8 @@ public class ChatService
 
     }
 
-    /// <summary>
+
     /// Use OpenAI to summarize the conversation to give it a relevant name on the web page
-    /// </summary>
     public async Task<string> SummarizeChatSessionNameAsync(string? sessionId)
     {
         ArgumentNullException.ThrowIfNull(sessionId);
@@ -223,9 +219,7 @@ public class ChatService
         return completionText;
     }
 
-    /// <summary>
     /// Add user prompt to a new chat session message object, calculate token count for prompt text.
-    /// </summary>
     private async Task<Message> CreateChatMessageAsync(string sessionId, string promptText)
     {
 
@@ -240,9 +234,7 @@ public class ChatService
         return chatMessage;
     }
 
-    /// <summary>
     /// Update session with user prompt and completion tokens and update the cache
-    /// </summary>
     private async Task UpdateSessionAndMessage(string sessionId, Message chatMessage)
     {
 
@@ -255,9 +247,8 @@ public class ChatService
 
     }
 
-    /// <summary>
+
     /// Calculate the number of tokens from the user prompt
-    /// </summary>
     private int GetTokens(string userPrompt)
     {
 
@@ -267,9 +258,8 @@ public class ChatService
 
     }
 
-    /// <summary>
+
     /// Query the semantic cache with user prompt vectors for the current context window in this conversation
-    /// </summary>
     private async Task<(string cachePrompts, float[] cacheVectors, string cacheResponse)> GetCacheAsync(List<Message> contextWindow)
     {
         //Grab the user prompts for the context window
@@ -285,9 +275,7 @@ public class ChatService
         return (prompts, vectors, response);
     }
 
-    /// <summary>
     /// Cache the last generated completion with user prompt vectors for the current context window in this conversation
-    /// </summary>
     private async Task CachePutAsync(string cachePrompts, float[] cacheVectors, string generatedCompletion)
     {
         //Include the user prompts text to view. They are not used in the cache search.
@@ -297,9 +285,7 @@ public class ChatService
         await _cosmosDbService.CachePutAsync(cacheItem);
     }
 
-    /// <summary>
     /// Clear the Semantic Cache
-    /// </summary>
     public async Task ClearCacheAsync()
     {
         await _cosmosDbService.CacheClearAsync();
