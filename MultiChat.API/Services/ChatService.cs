@@ -44,10 +44,10 @@ public class ChatService
 
     /// User creates a new Chat Session.
 
-    public async Task<Session> CreateNewChatSessionAsync()
+    public async Task<Session> CreateNewChatSessionAsync(string sessionId)
     {
 
-        Session session = new();
+        Session session = new(sessionId);
 
         await _cosmosDbService.InsertSessionAsync(session);
 

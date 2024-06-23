@@ -56,10 +56,11 @@ namespace MultiChat.API.Controllers
         /// Creates a new chat session.
         /// </summary>
         /// <returns>The created chat session.</returns>
-        [HttpPost("session")]
-        public async Task<ActionResult<Session>> CreateSession()
+        //[HttpPost("session")]
+        [HttpPost("session/{sessionId}")]
+        public async Task<ActionResult<Session>> CreateSession(string sessionId)
         {
-            var session = await _chatService.CreateNewChatSessionAsync();
+            var session = await _chatService.CreateNewChatSessionAsync(sessionId);
             return CreatedAtAction(nameof(GetSession), new { sessionId = session.SessionId }, session);
         }
 

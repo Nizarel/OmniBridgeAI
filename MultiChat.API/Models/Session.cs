@@ -16,9 +16,11 @@ public record Session
     [JsonIgnore]
     public List<Message> Messages { get; set; }
 
-    public Session()
+    //public Session()
+    public Session(string sessionId)
     {
-        Id = Guid.NewGuid().ToString();
+        //Id = Guid.NewGuid().ToString();
+        Id = sessionId;
         Type = nameof(Session);
         SessionId = this.Id;
         Tokens = 0;
