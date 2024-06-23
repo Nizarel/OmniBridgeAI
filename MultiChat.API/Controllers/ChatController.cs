@@ -2,11 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using MultiChat.API.Models;
 using MultiChat.API.Services;
-using SixLabors.ImageSharp;
-using SixLabors.ImageSharp.Formats.Jpeg;
-using SixLabors.ImageSharp.Processing;
 using SkiaSharp;
-
 
 
 namespace MultiChat.API.Controllers
@@ -140,8 +136,11 @@ namespace MultiChat.API.Controllers
 
             try
             {
-                var imageContent = new BinaryData(ConvertImageToReadOnlyMemory(request.imageFile));
-                var base64Image = Convert.ToBase64String(imageContent.ToArray());
+                byte[] imageArray = Stream2Base64Async(request.imageFile);
+
+                // Convert image data to base64 string  
+                string base64Image = Convert.ToBase64String(imageArray);
+
                 var message = await _chatService.GetImage2TextCompletionAsync(request.SessionId, request.PromptText, base64Image);
 
                 return Ok(message);
@@ -162,23 +161,7 @@ namespace MultiChat.API.Controllers
 
             try
             {
-                using var stream = request.imageFile.OpenReadStream();
-                using var skData = SKData.Create(stream);
-                using var skCodec = SKCodec.Create(skData);
-                using var originalBitmap = SKBitmap.Decode(skCodec);
-
-                SKImageInfo resizedInfo = new(640, 480);
-                using var resizedBitmap = originalBitmap.Resize(resizedInfo, SKFilterQuality.High);
-                using var image = SKImage.FromBitmap(resizedBitmap);
-                using var data = image.Encode(SKEncodedImageFormat.Jpeg, 75);
-                byte[] imageArray = data.ToArray();
-
-                byte[] imageData;
-                using (var ms = new MemoryStream())
-                {
-                    await request.imageFile.CopyToAsync(ms);
-                    imageData = ms.ToArray();
-                }
+                byte[] imageArray = Stream2Base64Async(request.imageFile.OpenReadStream());
 
                 // Convert image data to base64 string  
                 string base64Image = Convert.ToBase64String(imageArray);
@@ -221,7 +204,21 @@ namespace MultiChat.API.Controllers
             return Ok(newName);
         }
 
-        private static ReadOnlyMemory<byte> ConvertImageToReadOnlyMemory(Image image)
+
+        private static byte[] Stream2Base64Async(Stream stream)
+        {
+            using var skData = SKData.Create(stream);
+            using var skCodec = SKCodec.Create(skData);
+            using var originalBitmap = SKBitmap.Decode(skCodec);
+
+            SKImageInfo resizedInfo = new(640, 480);
+            using var resizedBitmap = originalBitmap.Resize(resizedInfo, SKFilterQuality.High);
+            using var image = SKImage.FromBitmap(resizedBitmap);
+            using var data = image.Encode(SKEncodedImageFormat.Jpeg, 75);
+ 
+            return data.ToArray();
+        }
+/*        private static ReadOnlyMemory<byte> ConvertImageToReadOnlyMemory(Image image)
         {
             using var memoryStream = new MemoryStream();
             // Ensure the image is in the correct format (e.g., RGB)
@@ -235,6 +232,6 @@ namespace MultiChat.API.Controllers
 
             // Convert the MemoryStream's buffer to ReadOnlyMemory<byte>
             return new ReadOnlyMemory<byte>(memoryStream.ToArray());
-        }
+        }*/
     }
 }
