@@ -132,9 +132,8 @@ public class CosmosDbService
         );
     }
 
-    /// <summary>
+
     /// Gets a list of all current chat sessions.
-    /// </summary>
     /// <returns>List of distinct chat session items.</returns>
     public async Task<List<Session>> GetSessionsAsync()
     {
