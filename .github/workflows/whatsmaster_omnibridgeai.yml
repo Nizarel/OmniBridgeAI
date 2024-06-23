@@ -1,21 +1,21 @@
 # Docs for the Azure Web Apps Deploy action: https://github.com/Azure/webapps-deploy
 # More GitHub Actions for Azure: https://github.com/Azure/actions
 
-name: Build and deploy ASP.Net Core app to Azure Web App - omnibridgeai
+name: Build and deploy ASP.Net Core app to Azure Web App - Whatsapiomnibridge
 
 on:
   push:
     branches:
-      - master
+      - WhatsMaster
     paths:
       - 'MultiChat.API/**'
-      - '.github/workflows/master_omnibridgeai.yml'
+      - '.github/workflows/whatsmaster_omnibridgeai.yml'
   pull_request:
     branches:
-      - master
+      - WhatsMaster
     paths:
       - 'MultiChat.API/**'
-      - '.github/workflows/master_omnibridgeai.yml'
+      - '.github/workflows/whatsmaster_omnibridgeai.yml'   
   workflow_dispatch:
 
 jobs:
@@ -61,14 +61,15 @@ jobs:
       - name: Login to Azure
         uses: azure/login@v1
         with:
-          client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_9729A665C8334408B241AD04ED404DE4 }}
-          tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_05A10FA416B64D3E841A6C16E3051CA6 }}
-          subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_62C08BE3B0664D28A7F51A6A7FBFFB35 }}
+          client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_2CA3149CFEFD4B799DA74DCE27C2F36C }}
+          tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_CB11162EB8A047F8A4ECA1699493DA1A }}
+          subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_4A139333D0154C57B9AA73FB3789A656 }}
 
       - name: Deploy to Azure Web App
         id: deploy-to-webapp
         uses: azure/webapps-deploy@v2
         with:
-          app-name: 'omnibridgeai'
+          app-name: 'Whatsapiomnibridge'
           slot-name: 'Production'
           package: .
+          
