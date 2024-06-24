@@ -31,6 +31,12 @@ public class ChatService
         return await _cosmosDbService.GetSessionsAsync();
     }
 
+    public async Task<List<Session>> GetChatSessionsAsync(string? sessionId)
+    {
+        ArgumentNullException.ThrowIfNull(sessionId);
+        return await _cosmosDbService.GetSessionsByIdAsync(sessionId);
+    }
+
 
     /// Returns the chat messages to display on the main web page when the user selects a chat from the left-hand nav
 
@@ -40,6 +46,7 @@ public class ChatService
 
         return await _cosmosDbService.GetSessionMessagesAsync(sessionId); ;
     }
+
 
 
     /// User creates a new Chat Session.
