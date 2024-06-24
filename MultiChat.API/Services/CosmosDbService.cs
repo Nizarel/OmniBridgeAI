@@ -152,6 +152,28 @@ public class CosmosDbService
     }
 
     /// <summary>
+    /// Gets a list of all current chat sessions.
+    /// </summary>
+    /// <returns>List of distinct chat session items.</returns>
+    public async Task<List<Session>> GetSessionsByIdAsync(string sessionId)
+    {
+        //QueryDefinition query = new QueryDefinition("SELECT DISTINCT * FROM c WHERE c.type = @type")
+        QueryDefinition query = new QueryDefinition("SELECT DISTINCT * FROM c WHERE c.sessionId = @sessionId AND c.type = @type")
+            .WithParameter("@sessionId", sessionId)
+            .WithParameter("@type", nameof(Session));
+
+        FeedIterator<Session> response = _chatContainer.GetItemQueryIterator<Session>(query);
+
+        List<Session> output = new();
+        while (response.HasMoreResults)
+        {
+            FeedResponse<Session> results = await response.ReadNextAsync();
+            output.AddRange(results);
+        }
+        return output;
+    }
+
+    /// <summary>
     /// Gets a list of all current chat messages for a specified session identifier.
     /// </summary>
     /// <param name="sessionId">Chat session identifier used to filter messsages.</param>

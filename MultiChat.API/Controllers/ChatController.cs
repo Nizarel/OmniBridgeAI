@@ -40,12 +40,19 @@ namespace MultiChat.API.Controllers
         [HttpGet("session/{sessionId}")]
         public async Task<ActionResult<Session>> GetSession(string sessionId)
         {
-            var session = await _chatService.GetChatSessionMessagesAsync(sessionId);
-            if (session == null)
+            try
             {
-                return NotFound();
+                var session = await _chatService.GetChatSessionsAsync(sessionId);
+                if (session == null || session.Count == 0) // session.Count == 0
+                {
+                    return NotFound();
+                }
+                return Ok(session);
             }
-            return Ok(session);
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
         }
 
         /// <summary>
@@ -54,11 +61,19 @@ namespace MultiChat.API.Controllers
         /// <returns>The created chat session.</returns>
         //[HttpPost("session")]
         [HttpPost("session/{sessionId}")]
-        public async Task<ActionResult<Session>> CreateSession(string sessionId)
+        public async Task<ActionResult<Session>> AddSession(string sessionId)
         {
             var session = await _chatService.CreateNewChatSessionAsync(sessionId);
             return CreatedAtAction(nameof(GetSession), new { sessionId = session.SessionId }, session);
         }
+
+/*        [HttpPost]
+        public async Task<ActionResult<Session>> CreateSession([FromBody] ChatRequest request)
+        {
+            // Add 'await' operator to await the non-blocking API call
+            var session = await _chatService.CreateNewChatSessionAsync(request.SessionId);
+            return CreatedAtAction(nameof(GetSession), new { sessionId = session.SessionId }, session);
+        }*/
 
         /// <summary>
         /// Renames an existing chat session.
