@@ -138,15 +138,16 @@ namespace MultiChat.API.Controllers
         }
 
 
-        // ...
+        // ... imgChatRequest
 
 
         [HttpPost("image")]
-        public async Task<IActionResult> ImageCompletion([FromBody] imgChatRequest request)
+        public async Task<ActionResult<Message>> ImageCompletion([FromForm] imgChatRequest request)
         {
-            if (request.imageFile == null)
+            if (request.imageFile == null || request.imageFile.Length == 0)
             {
                 return BadRequest("Image file is required.");
+                
             }
 
             try
@@ -172,6 +173,7 @@ namespace MultiChat.API.Controllers
             if (request.imageFile == null || request.imageFile.Length == 0)
             {
                 return BadRequest("Image file is required.");
+
             }
 
             try
@@ -194,6 +196,8 @@ namespace MultiChat.API.Controllers
                 return StatusCode(500, $"Internal server error: {ex.Message}");
             }
         }
+
+
 
         /// <summary>
         /// Retrieves all messages for a specific chat session.
@@ -233,20 +237,6 @@ namespace MultiChat.API.Controllers
  
             return data.ToArray();
         }
-/*        private static ReadOnlyMemory<byte> ConvertImageToReadOnlyMemory(Image image)
-        {
-            using var memoryStream = new MemoryStream();
-            // Ensure the image is in the correct format (e.g., RGB)
-            image.Mutate(x => x.AutoOrient());
 
-            // Save the image to the MemoryStream, using JPEG format
-            image.SaveAsJpeg(memoryStream, new JpegEncoder());
-
-            // Optionally, reset the position of the MemoryStream to the beginning
-            memoryStream.Position = 0;
-
-            // Convert the MemoryStream's buffer to ReadOnlyMemory<byte>
-            return new ReadOnlyMemory<byte>(memoryStream.ToArray());
-        }*/
     }
 }
