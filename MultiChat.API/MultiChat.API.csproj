@@ -7,14 +7,11 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Azure.Identity" Version="1.11.4" />
-    <PackageReference Include="Humanizer" Version="2.*" />
     <PackageReference Include="Microsoft.Azure.Cosmos" Version="3.41.0-preview.0" />
     <PackageReference Include="Microsoft.ML.Tokenizers" Version="0.22.0-preview.24179.1" />
     <PackageReference Include="Azure.AI.OpenAI" Version="1.0.0-beta.17" />
     <PackageReference Include="Microsoft.SemanticKernel" Version="1.14.1" />
     <PackageReference Include="Microsoft.SemanticKernel.Plugins.Core" Version="1.14.1-alpha" />
-    <PackageReference Include="SixLabors.ImageSharp" Version="3.1.4" />
     <PackageReference Include="SkiaSharp" Version="2.88.8" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.6.2" />
   </ItemGroup>
