@@ -9,7 +9,7 @@ namespace MultiChat.API.Models
     {
         public string SessionId { get; set; }
         public string? PromptText { get; set; }
-        public Stream? imageFile { get; set; }
+        public string? imageFile { get; set; }
     }
 }
 
