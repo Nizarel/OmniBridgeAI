@@ -67,14 +67,6 @@ namespace MultiChat.API.Controllers
             return CreatedAtAction(nameof(GetSession), new { sessionId = session.SessionId }, session);
         }
 
-/*        [HttpPost]
-        public async Task<ActionResult<Session>> CreateSession([FromBody] ChatRequest request)
-        {
-            // Add 'await' operator to await the non-blocking API call
-            var session = await _chatService.CreateNewChatSessionAsync(request.SessionId);
-            return CreatedAtAction(nameof(GetSession), new { sessionId = session.SessionId }, session);
-        }*/
-
         /// <summary>
         /// Renames an existing chat session.
         /// </summary>
@@ -138,31 +130,29 @@ namespace MultiChat.API.Controllers
         }
 
 
-        // ... imgChatRequest
-
         [HttpPost("image")]
-        public async Task<ActionResult<Message>> ImageCompletion([FromForm] imgChatRequest request)
+       // public async Task<ActionResult<Message>> ImageCompletion([FromBody] imgChatRequest request)
+        public async Task<IActionResult> ImageCompletion([FromBody] imgChatRequest request)
         {
-            if (request.imageFile == null || request.imageFile.Length == 0)
+            if (request == null || string.IsNullOrEmpty(request.SessionId) || string.IsNullOrEmpty(request.PromptText) || string.IsNullOrEmpty(request.imageFile))
             {
-                return BadRequest("Image file is required.");
+                return BadRequest("Invalid request");
             }
 
             try
             {
-                //string base64Image = ConvertImageToBase64(request.imageFile.OpenReadStream());
-                string base64Image = ConvertImageToBase64(request.imageFile);
-                var message = await _chatService.GetImage2TextCompletionAsync(request.SessionId, request.PromptText, base64Image);
+
+                var message = await _chatService.GetImage2TextCompletionAsync(request.SessionId, request.PromptText, request.imageFile);
                 return Ok(message);
             }
             catch (Exception ex)
             {
                 // Log the exception here
-                return StatusCode(500, "Internal server error occurred.");
+                return StatusCode(500, $"Internal server error: {ex}");
             }
         }
 
-        [HttpPost("analyze")]
+        [HttpPost("analyzeImage")]
         public async Task<ActionResult<Message>> AnalyzeImage([FromForm] ChatRequest request)
         {
             if (request.imageFile == null || request.imageFile.Length == 0)
@@ -182,35 +172,6 @@ namespace MultiChat.API.Controllers
                 return StatusCode(500, "Internal server error occurred.");
             }
         }
-
-
-        /*        [HttpPost("image")]
-                public async Task<ActionResult<Message>> ImageCompletion([FromForm] imgChatRequest request)
-                {
-                    if (request.imageFile == null || request.imageFile.Length == 0)
-                    {
-                        return BadRequest("Image file is required.");
-
-                    }
-
-                    try
-                    {
-                        byte[] imageArray = Stream2Base64Async(request.imageFile);
-
-                        // Convert image data to base64 string  
-                        string base64Image = Convert.ToBase64String(imageArray);
-
-                        var message = await _chatService.GetImage2TextCompletionAsync(request.SessionId, request.PromptText, base64Image);
-
-                        return Ok(message);
-                    }
-                    catch (System.Exception ex)
-                    {
-                        return StatusCode(500, $"Internal server error: {ex}");
-                    }
-                }*/
-
-
 
         /// <summary>
         /// Retrieves all messages for a specific chat session.
