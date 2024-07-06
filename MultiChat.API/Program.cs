@@ -13,6 +13,12 @@ builder.Services.RegisterServices();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+builder.WebHost.ConfigureKestrel(options =>
+{
+    options.Limits.MaxRequestBodySize = null; // Removes the limit; use with caution
+});
+
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -32,7 +38,7 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 app.UseRouting();
 
-app.MapControllers(); // Map controllers instead of Blazor hub
+app.MapControllers(); // Map controllers instead of Blazor hub 
 
 await app.RunAsync();
 
@@ -84,7 +90,8 @@ static class ProgramExtensions
                     endpoint: openAiOptions.Value?.Endpoint ?? String.Empty,
                     key: openAiOptions.Value?.Key ?? String.Empty,
                     completionDeploymentName: openAiOptions.Value?.CompletionDeploymentName ?? String.Empty,
-                    embeddingDeploymentName: openAiOptions.Value?.EmbeddingDeploymentName ?? String.Empty
+                    embeddingDeploymentName: openAiOptions.Value?.EmbeddingDeploymentName ?? String.Empty,
+                    Speech2TextDeploymentName: openAiOptions.Value?.Speech2TextDeploymentName ?? String.Empty
                 );
             }
         });
@@ -103,7 +110,8 @@ static class ProgramExtensions
                     endpoint: semanticKernalOptions.Value?.Endpoint ?? String.Empty,
                     key: semanticKernalOptions.Value?.Key ?? String.Empty,
                     completionDeploymentName: semanticKernalOptions.Value?.CompletionDeploymentName ?? String.Empty,
-                    embeddingDeploymentName: semanticKernalOptions.Value?.EmbeddingDeploymentName ?? String.Empty
+                    embeddingDeploymentName: semanticKernalOptions.Value?.EmbeddingDeploymentName ?? String.Empty,
+                    Speech2TextDeploymentName: semanticKernalOptions.Value?.Speech2TextDeploymentName ?? String.Empty
                 );
             }
         });
