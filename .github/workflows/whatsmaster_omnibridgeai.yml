@@ -1,12 +1,21 @@
 # Docs for the Azure Web Apps Deploy action: https://github.com/Azure/webapps-deploy
 # More GitHub Actions for Azure: https://github.com/Azure/actions
 
-name: Build and deploy ASP.Net Core app to Azure Web App - omnibridgeai
+name: Build and deploy ASP.Net Core app to Azure Web App - Whatsapiomnibridge
 
 on:
   push:
     branches:
-      - master
+      - WhatsMaster
+    paths:
+      - 'MultiChat.API/**'
+      - '.github/workflows/whatsmaster_omnibridgeai.yml'
+  pull_request:
+    branches:
+      - WhatsMaster
+    paths:
+      - 'MultiChat.API/**'
+      - '.github/workflows/whatsmaster_omnibridgeai.yml'   
   workflow_dispatch:
 
 jobs:
@@ -26,13 +35,13 @@ jobs:
         run: dotnet build --configuration Release
 
       - name: dotnet publish
-        run: dotnet publish -c Release -o ${{env.DOTNET_ROOT}}/myapp
+        run: dotnet publish -c Release -o ${{env.DOTNET_ROOT}}
 
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v3
         with:
           name: .net-app
-          path: ${{env.DOTNET_ROOT}}/myapp
+          path: ${{env.DOTNET_ROOT}}
 
   deploy:
     runs-on: ubuntu-latest
@@ -52,15 +61,15 @@ jobs:
       - name: Login to Azure
         uses: azure/login@v1
         with:
-          client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_9B645025AFC24483AA6350B7D0090399 }}
-          tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_F7B4C31F19C44A4BA3E4325EA0763CE8 }}
-          subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_539FB3A8A2334BC6B4B3D747FC486F0E }}
+          client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_2CA3149CFEFD4B799DA74DCE27C2F36C }}
+          tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_CB11162EB8A047F8A4ECA1699493DA1A }}
+          subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_4A139333D0154C57B9AA73FB3789A656 }}
 
       - name: Deploy to Azure Web App
         id: deploy-to-webapp
         uses: azure/webapps-deploy@v2
         with:
-          app-name: 'omnibridgeai'
+          app-name: 'Whatsapiomnibridge'
           slot-name: 'Production'
           package: .
           
