@@ -24,7 +24,7 @@ namespace MultiChat.API.Services
         private readonly string _systemPrompt = @"
         You are an AI assistant that helps people to shop online through WhatsApp chat!
         You should answer questions about products, provide recommendations, and help users to make decisions.
-        Your response should be in Open Graph Meta Tags format.";
+        Your response should be in Open Graph Meta Tags format without HTML header.";
 
         /// System prompt to send with user prompts to instruct the model for summarization
         private readonly string _summarizePrompt = @"
