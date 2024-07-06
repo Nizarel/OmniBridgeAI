@@ -9,5 +9,7 @@
         public required string CompletionDeploymentName { get; init; }
 
         public required string EmbeddingDeploymentName { get; init; }
+        
+        public required string Speech2TextDeploymentName { get; init; }
     }
 }

@@ -1,5 +1,8 @@
 ﻿using Azure;
 using Azure.AI.OpenAI;
+using Microsoft.CognitiveServices.Speech;
+using Microsoft.CognitiveServices.Speech.Audio;
+using Microsoft.SemanticKernel;
 using MultiChat.API.Models;
 
 namespace MultiChat.API.Services;
@@ -8,6 +11,7 @@ public class OpenAiService
 {
     private readonly string _completionDeploymentName = String.Empty;
     private readonly string _embeddingDeploymentName = String.Empty;
+    private readonly string _Speech2TextDeploymentName = String.Empty;
     private readonly OpenAIClient _client;
 
 
@@ -26,15 +30,18 @@ public class OpenAiService
     /// Creates a new instance of the service.
     /// This constructor will validate credentials and create a HTTP client instance.
 
-    public OpenAiService(string endpoint, string key, string completionDeploymentName, string embeddingDeploymentName)
+    public OpenAiService(string endpoint, string key, string completionDeploymentName, string embeddingDeploymentName, string Speech2TextDeploymentName)
     {
         ArgumentNullException.ThrowIfNullOrEmpty(endpoint);
         ArgumentNullException.ThrowIfNullOrEmpty(key);
         ArgumentNullException.ThrowIfNullOrEmpty(completionDeploymentName);
         ArgumentNullException.ThrowIfNullOrEmpty(embeddingDeploymentName);
+        ArgumentNullException.ThrowIfNullOrEmpty(Speech2TextDeploymentName);
 
         _completionDeploymentName = completionDeploymentName;
         _embeddingDeploymentName = embeddingDeploymentName;
+        _Speech2TextDeploymentName = Speech2TextDeploymentName;
+
 
         _client = new(new Uri(endpoint), new AzureKeyCredential(key));
     }
@@ -69,13 +76,49 @@ public class OpenAiService
         ChatCompletions completions = completionsResponse.Value;
 
         string completion = completions.Choices[0].Message.Content;
+
+
+        int tokens = completions.Usage.CompletionTokens;
+
+        return (completion, tokens);
+    }
+
+    /// Sends a prompt to the deployed OpenAI LLM model and returns the response.
+
+    public async Task<(string completion, int tokens)> VoiceCompletionAsync(string sessionId, List<Message> conversation)
+    {
+
+        //Serialize the conversation to a string to send to OpenAI
+        string conversationString = string.Join(Environment.NewLine, conversation.Select(m => m.Prompt + " " + m.Completion));
+
+        ChatCompletionsOptions options = new()
+        {
+            DeploymentName = _completionDeploymentName,
+            Messages =
+            {
+                new ChatRequestSystemMessage(_systemPrompt),
+                new ChatRequestUserMessage(conversationString)
+            },
+            User = sessionId,
+            MaxTokens = 1000,
+            Temperature = (float)0.7,
+            NucleusSamplingFactor = (float)0.95,
+            FrequencyPenalty = 0,
+            PresencePenalty = 0
+        };
+
+        Response<ChatCompletions> completionsResponse = await _client.GetChatCompletionsAsync(options);
+
+        ChatCompletions completions = completionsResponse.Value;
+
+        string completion = completions.Choices[0].Message.Content;
         int tokens = completions.Usage.CompletionTokens;
 
 
         return (completion, tokens);
     }
 
- 
+
     /// Sends the existing conversation to the OpenAI model and returns a two word summary.
 
     public async Task<string> SummarizeAsync(string sessionId, string conversationText)

@@ -169,7 +169,7 @@ namespace MultiChat.API.Controllers
             catch (Exception ex)
             {
                 // Log the exception here
-                return StatusCode(500, "Internal server error occurred.");
+                return StatusCode(500, $"Internal server error: {ex}");
             }
         }
 
