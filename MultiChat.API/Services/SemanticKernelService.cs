@@ -7,6 +7,7 @@ using Microsoft.SemanticKernel.AudioToText;
 using MultiChat.API.Plugins.PlaceSuggestionsPlugin;
 using MultiChat.API.Models;
 using Azure.AI.OpenAI;
+using Microsoft.SemanticKernel.TextToAudio;
 
 
 
@@ -178,6 +179,23 @@ namespace MultiChat.API.Services
             return textContent.Text!;
         }
 
+        public async Task<AudioContent> Text2Audio(string InputText)
+        {
+            OpenAITextToAudioExecutionSettings executionSettings = new()
+            {
+                Voice = "alloy", // The voice to use when generating the audio.
+                                 // Supported voices are alloy, echo, fable, onyx, nova, and shimmer.
+                ResponseFormat = "mp3", // The format to audio in.
+                                        // Supported formats are mp3, opus, aac, and flac.
+                Speed = 1.0f // The speed of the generated audio.
+                             // Select a value from 0.25 to 4.0. 1.0 is the default.
+            };
+
+            AudioContent audioContent = await kernel.GetRequiredService<ITextToAudioService>().GetAudioContentAsync(InputText, executionSettings);
+
+            return audioContent;
+
+        }
 
         /// Generates embeddings from the deployed OpenAI embeddings model using Semantic Kernel.
 

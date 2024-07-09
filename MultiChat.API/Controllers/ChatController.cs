@@ -1,5 +1,6 @@
 ﻿using Azure.AI.OpenAI;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.SemanticKernel;
 using MultiChat.API.Models;
 using MultiChat.API.Services;
 using SkiaSharp;
@@ -192,6 +193,23 @@ namespace MultiChat.API.Controllers
                 return StatusCode(500, $"Internal server error: {ex}");
             }
         }
+
+/*        [HttpPost("audio/{TextIn}")]
+        public async Task<ActionResult<Message>> Text2Speech(string TextIn)
+        {
+            try
+            {
+                var message = await _chatService.Text2Speech(TextIn);
+
+                return Ok(message);
+            }
+            catch (Exception ex)
+            {
+                // Log the exception here
+                return StatusCode(500, $"Internal server error: {ex}");
+            }
+        }*/
+
 
         /// <summary>
         /// Retrieves all messages for a specific chat session.

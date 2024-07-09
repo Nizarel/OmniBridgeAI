@@ -1,9 +1,10 @@
 ﻿using Microsoft.ML.Tokenizers;
+using Microsoft.SemanticKernel;
 using MultiChat.API.Models;
 
 namespace MultiChat.API.Services;
 
-
+#pragma warning disable SKEXP0010, SKEXP0001, SKEXP0050
 public class ChatService
 {
 
@@ -233,6 +234,11 @@ public class ChatService
     public async Task<string> Speech2Text (Stream audioStream)
     {
         return await _semanticKernelService.GetAudio2TextAsync(audioStream);
+    }
+
+    public async Task<AudioContent> Text2Speech (String InputText)
+    {
+        return await _semanticKernelService.Text2Audio(InputText);
     }
 
     /// <summary>
