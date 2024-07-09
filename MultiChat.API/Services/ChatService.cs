@@ -230,6 +230,11 @@ public class ChatService
         return completionText;
     }
 
+    public async Task<string> Speech2Text (Stream audioStream)
+    {
+        return await _semanticKernelService.GetAudio2TextAsync(audioStream);
+    }
+
     /// <summary>
     /// Add user prompt to a new chat session message object, calculate token count for prompt text.
     /// </summary>

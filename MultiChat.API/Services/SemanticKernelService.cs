@@ -23,8 +23,7 @@ namespace MultiChat.API.Services
         /// System prompt to send with user prompts to instruct the model for chat session
         private readonly string _systemPrompt = @"
         You are an AI assistant that helps people to shop online through WhatsApp chat!
-        You should answer questions about products, provide recommendations, and help users to make decisions.
-        Your response should be in Open Graph Meta Tags format.";
+        You should answer questions about products, provide recommendations, and help users to make decisions.";
 
         /// System prompt to send with user prompts to instruct the model for summarization
         private readonly string _summarizePrompt = @"
@@ -156,13 +155,8 @@ namespace MultiChat.API.Services
         }
 
         /// Generates Audio to text completion using a user prompt with chat history to Semantic Kernel and returns the response.
-        public async Task<(string completion, int tokens)> GetAudio2TextAsync(string sessionId, List<Message> chatHistory, Stream audioFileStream)
+        public async Task<string> GetAudio2TextAsync(Stream audioFileStream)
         {
-
-
-            var skChatHistory = new ChatHistory();
-            skChatHistory.AddSystemMessage(_systemPrompt);
-
             OpenAIAudioToTextExecutionSettings executionSettings = new()
             {
                 Language = "en", // The language of the audio data as two-letter ISO-639-1 language code (e.g. 'en' or 'es').
@@ -179,16 +173,10 @@ namespace MultiChat.API.Services
             AudioContent audioContent = new(audioFileBinaryData, "mimeType: null");
 
 
-            var result = await kernel.GetRequiredService<IAudioToTextService>().GetTextContentAsync(audioContent, executionSettings);
+            var textContent = await kernel.GetRequiredService<IAudioToTextService>().GetTextContentAsync(audioContent, executionSettings);
 
-            CompletionsUsage completionUsage = (CompletionsUsage)result.Metadata!["Usage"]!;
-
-            string completion = result.Text;
-            int tokens = completionUsage.CompletionTokens;
-
-            return (completion, tokens);
+            return textContent.Text!;
         }
-
 
 
         /// Generates embeddings from the deployed OpenAI embeddings model using Semantic Kernel.

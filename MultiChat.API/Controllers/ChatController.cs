@@ -173,6 +173,26 @@ namespace MultiChat.API.Controllers
             }
         }
 
+        [HttpPost("audio")]
+        public async Task<ActionResult<Message>> AudioCompletion([FromForm] speechChat request)
+        {
+            if (request.audioFile == null || request.audioFile.Length == 0)
+            {
+                return BadRequest("Audio file is required.");
+            }
+
+            try
+            {
+                var message = await _chatService.Speech2Text(request.audioFile.OpenReadStream());
+                return Ok(message);
+            }
+            catch (Exception ex)
+            {
+                // Log the exception here
+                return StatusCode(500, $"Internal server error: {ex}");
+            }
+        }
+
         /// <summary>
         /// Retrieves all messages for a specific chat session.
         /// </summary>
