@@ -1,8 +1,4 @@
 ﻿
-using System.Text.Json.Serialization;
-using System.Text.Json;
-using SkiaSharp;
-
 namespace MultiChat.API.Models
 {
     public class imgChatRequest

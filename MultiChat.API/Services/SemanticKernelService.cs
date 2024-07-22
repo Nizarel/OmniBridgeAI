@@ -4,10 +4,12 @@ using Microsoft.SemanticKernel.Embeddings;
 using Microsoft.SemanticKernel.Connectors.OpenAI;
 using Microsoft.SemanticKernel.Plugins.Core;
 using Microsoft.SemanticKernel.AudioToText;
-using MultiChat.API.Plugins.PlaceSuggestionsPlugin;
+using MultiChat.API.Plugins.FlightTrackerPlugin;
 using MultiChat.API.Models;
 using Azure.AI.OpenAI;
 using Microsoft.SemanticKernel.TextToAudio;
+using MultiChat.API.Plugins.WeatherPlugin;
+using MultiChat.API.Plugins.PlaceSuggestionsPlugin;
 
 
 
@@ -25,6 +27,10 @@ namespace MultiChat.API.Services
         private readonly string _systemPrompt = @"
         You are an AI assistant that helps people to shop online through WhatsApp chat!
         You should answer questions about products, provide recommendations, and help users to make decisions.";
+        /*private readonly string _systemPrompt = @"
+        You're a virtual assistant responsible for only flight tracking, weather updates and finding out the right places within Morocco after inquiring about the proximity or city. 
+        You should not talk anything outside of your scope. Your response should be very concise and to the point. For each correct answer, 
+        you will get some $10 from me as a reward. Be nice with people";*/
 
         /// System prompt to send with user prompts to instruct the model for summarization
         private readonly string _summarizePrompt = @"
@@ -51,6 +57,9 @@ namespace MultiChat.API.Services
                 .AddAzureOpenAITextEmbeddingGeneration(embeddingDeploymentName, endpoint, key);
 
             builder.Plugins.AddFromType<TimePlugin>();
+            builder.Plugins.AddFromObject(new FlightTrackerPlugin("4d5926944f0831f30c1f61f6624274bf"), nameof(FlightTrackerPlugin));
+            builder.Plugins.AddFromObject(new WeatherPlugin("196802c3c1db4e6cad805554242605"), nameof(WeatherPlugin));
+            builder.Plugins.AddFromObject(new PlaceSuggestionsPlugin("6HAwpsmvqxhvTsZ7bf93dfiWvQD8x6Kl64XgrljmIxAKj56EnQ9lJQQJ99AEACYeBjFQu2YMAAAgAZMPVBDu"), nameof(PlaceSuggestionsPlugin));
 
             kernel = builder.Build();
 
@@ -98,7 +107,7 @@ namespace MultiChat.API.Services
                     { "TopP", 0.7 },
                     { "MaxTokens", 1000  }
                 }
-                //AutoInvokeKernelFunctions = true // Enable AutoInvokeKernelFunctions
+                
             };
 
             var result = await kernel.GetRequiredService<IChatCompletionService>().GetChatMessageContentAsync(skChatHistory, settings);
@@ -122,7 +131,7 @@ namespace MultiChat.API.Services
                 var collectionItems = new ChatMessageContentItemCollection
                 {
                     new TextContent(message.Prompt),
-                    new ImageContent(new Uri("data:image/jpeg;" + $"base64,{b64imgr}"))
+                    new ImageContent { DataUri = "data:image/jpeg;base64," + b64imgr }
 
                 };
                 
@@ -228,7 +237,6 @@ namespace MultiChat.API.Services
                         { "MaxTokens", 100 }
                     }
             };
-
 
             var result = await kernel.GetRequiredService<IChatCompletionService>().GetChatMessageContentAsync(skChatHistory, settings);
 
