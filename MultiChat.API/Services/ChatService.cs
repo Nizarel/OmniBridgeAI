@@ -1,4 +1,4 @@
-﻿using Microsoft.ML.Tokenizers;
+using Microsoft.ML.Tokenizers;
 using Microsoft.SemanticKernel;
 using MultiChat.API.Models;
 
