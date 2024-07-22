@@ -5,6 +5,8 @@
         public required string Endpoint { get; init; }
 
         public required string Key { get; init; }
+
+        public required string Index { get; init; }
         
     }
 }

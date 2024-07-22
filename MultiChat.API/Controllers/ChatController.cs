@@ -1,5 +1,6 @@
 ﻿using Azure.AI.OpenAI;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.SemanticKernel;
 using MultiChat.API.Models;
 using MultiChat.API.Services;
 using SkiaSharp;
@@ -173,6 +174,50 @@ namespace MultiChat.API.Controllers
             }
         }
 
+        [HttpPost("audio")]
+        public async Task<ActionResult<Message>> AudioCompletion([FromForm] speechChat request)
+        {
+            if (request.audioFile == null || request.audioFile.Length == 0)
+            {
+                return BadRequest("Audio file is required.");
+            }
+
+            try
+            {
+                var AudioMessage = await _chatService.Speech2Text(request.audioFile.OpenReadStream());
+
+                        return Ok(AudioMessage);
+            }
+            catch (Exception ex)
+            {
+                // Log the exception here
+                return StatusCode(500, $"Internal server error: {ex}");
+            }
+        }
+
+        [HttpPost("Voice")]
+        public async Task<ActionResult<Message>> VoiceCompletion([FromForm] speechChat request)
+        {
+            if (request.audioFile == null || request.audioFile.Length == 0)
+            {
+                return BadRequest("Audio file is required.");
+            }
+
+            try
+            {
+                var VoiceMsg = await _chatService.Speech2Text(request.audioFile.OpenReadStream());
+
+                var message = await _chatService.GetChatCompletionAsync(request.SessionId, VoiceMsg);
+
+                return Ok(message);
+            }
+            catch (Exception ex)
+            {
+                // Log the exception here
+                return StatusCode(500, $"Internal server error: {ex}");
+            }
+        }
+
         /// <summary>
         /// Retrieves all messages for a specific chat session.
         /// </summary>
@@ -211,20 +256,6 @@ namespace MultiChat.API.Controllers
             return Convert.ToBase64String(data.ToArray());
         }
 
-
-        /*private static byte[] Stream2Base64Async(Stream stream)
-        {
-            using var skData = SKData.Create(stream);
-            using var skCodec = SKCodec.Create(skData);
-            using var originalBitmap = SKBitmap.Decode(skCodec);
-
-            SKImageInfo resizedInfo = new(640, 480);
-            using var resizedBitmap = originalBitmap.Resize(resizedInfo, SKFilterQuality.High);
-            using var image = SKImage.FromBitmap(resizedBitmap);
-            using var data = image.Encode(SKEncodedImageFormat.Jpeg, 75);
- 
-            return data.ToArray();
-        }*/
 
     }
 }
