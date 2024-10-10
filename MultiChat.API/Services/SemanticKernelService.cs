@@ -1,8 +1,9 @@
 using Microsoft.SemanticKernel;
 using Microsoft.SemanticKernel.ChatCompletion;
+using Microsoft.SemanticKernel.Plugins.Core;
+using Microsoft.SemanticKernel.Plugins;
 using Microsoft.SemanticKernel.Embeddings;
 using Microsoft.SemanticKernel.Connectors.OpenAI;
-using Microsoft.SemanticKernel.Plugins.Core;
 using Microsoft.SemanticKernel.AudioToText;
 using MultiChat.API.Plugins.FlightTrackerPlugin;
 using MultiChat.API.Models;
@@ -57,31 +58,20 @@ namespace MultiChat.API.Services
                 .AddAzureOpenAIAudioToText(Speech2TextDeploymentName, endpoint, key)
                 .AddAzureOpenAITextEmbeddingGeneration(embeddingDeploymentName, endpoint, key);
 
+
             builder.Plugins.AddFromType<TimePlugin>();
-            builder.Plugins.AddFromObject(new FlightTrackerPlugin("4d5926944f0831f30c1f61f6624274bf"), nameof(FlightTrackerPlugin));
-            builder.Plugins.AddFromObject(new WeatherPlugin("196802c3c1db4e6cad805554242605"), nameof(WeatherPlugin));
-            builder.Plugins.AddFromObject(new PlaceSuggestionsPlugin("6HAwpsmvqxhvTsZ7bf93dfiWvQD8x6Kl64XgrljmIxAKj56EnQ9lJQQJ99AEACYeBjFQu2YMAAAgAZMPVBDu"), nameof(PlaceSuggestionsPlugin));
+
 
             kernel = builder.Build();
 
+            
 
-            // Initialize the Semantic Kernel
-            /*            kernel = Kernel.CreateBuilder()
-                            .AddAzureOpenAIChatCompletion(completionDeploymentName, endpoint, key)
-                            .AddAzureOpenAITextEmbeddingGeneration(embeddingDeploymentName, endpoint, key)
-                            .Build();
+            //kernel.ImportPluginFromType<FlightTrackerPlugin>("4d5926944f0831f30c1f61f6624274bf");
 
-                        kernel.Plugins.AddFromObject(new PlaceSuggestionsPlugin("6HAwpsmvqxhvTsZ7bf93dfiWvQD8x6Kl64XgrljmIxAKj56EnQ9lJQQJ99AEACYeBjFQu2YMAAAgAZMPVBDu"), nameof(PlaceSuggestionsPlugin));
-                        #pragma warning disable SKEXP0050
-                        kernel.Plugins.AddFromType<TimePlugin>();*/
-
-
-            //.AddfromObject(new ConversationSummaryPlugin())
-            //Add the Summarization plugin
-            //kernel.Plugins.AddFromType<ConversationSummaryPlugin>();
-
-
-
+            //builder.Plugins.AddFromType<TimePlugin>();
+            //builder.Plugins.AddFromObject(new FlightTrackerPlugin("4d5926944f0831f30c1f61f6624274bf"), nameof(FlightTrackerPlugin));
+            //builder.Plugins.AddFromObject(new WeatherPlugin("196802c3c1db4e6cad805554242605"), nameof(WeatherPlugin));
+            //builder.Plugins.AddFromObject(new PlaceSuggestionsPlugin("6HAwpsmvqxhvTsZ7bf93dfiWvQD8x6Kl64XgrljmIxAKj56EnQ9lJQQJ99AEACYeBjFQu2YMAAAgAZMPVBDu"), nameof(PlaceSuggestionsPlugin));
 
         }
 
@@ -98,7 +88,6 @@ namespace MultiChat.API.Services
                     skChatHistory.AddAssistantMessage(message.Completion);
             }
 
-            //PromptExecutionSettings settings = new()
             OpenAIPromptExecutionSettings settings = new()
             {
                 ToolCallBehavior = ToolCallBehavior.AutoInvokeKernelFunctions,
@@ -111,7 +100,15 @@ namespace MultiChat.API.Services
                 
             };
 
-            var result = await kernel.GetRequiredService<IChatCompletionService>().GetChatMessageContentAsync(skChatHistory, settings);
+            //var result = await kernel.GetRequiredService<IChatCompletionService>().GetChatMessageContentAsync(skChatHistory, settings);
+
+            var chatCompletionService = kernel.GetRequiredService<IChatCompletionService>();
+
+            var result = await chatCompletionService.GetChatMessageContentAsync(
+                    skChatHistory,
+                    executionSettings: settings,
+                    kernel: kernel);
+
 
             CompletionsUsage completionUsage = (CompletionsUsage)result.Metadata!["Usage"]!;
 
