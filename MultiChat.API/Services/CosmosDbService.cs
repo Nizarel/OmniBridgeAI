@@ -1,7 +1,10 @@
-﻿using MultiChat.API.Models;
+﻿//using Azure.Core;
+//using Azure.Identity;
+using MultiChat.API.Models;
 using Microsoft.Azure.Cosmos;
 using Microsoft.Azure.Cosmos.Fluent;
 using System.Collections.ObjectModel;
+//using Microsoft.Identity.Client.Platforms.Features.DesktopOs.Kerberos;
 
 
 namespace MultiChat.API.Services;
@@ -36,9 +39,12 @@ public class CosmosDbService
             PropertyNamingPolicy = CosmosPropertyNamingPolicy.CamelCase
         };
 
+        //TokenCredential credential = new DefaultAzureCredential();
+
+        //CosmosClient client = new CosmosClientBuilder(endpoint, credential)
         CosmosClient client = new CosmosClientBuilder(endpoint, key)
             .WithSerializerOptions(options)
-            .Build()!;
+            .Build();
 
         Database database = client.GetDatabase(databaseName)!;
         Container chatContainer = database.GetContainer(chatContainerName)!;

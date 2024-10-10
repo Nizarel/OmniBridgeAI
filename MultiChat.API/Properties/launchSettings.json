@@ -5,7 +5,9 @@
       "launchBrowser": true,
       "launchUrl": "swagger",
       "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Development"
+        "ASPNETCORE_ENVIRONMENT": "Development",
+        "AZURE_CLIENT_ID": "47f2a66f-6bd6-4b3f-917a-734ae022a276",
+        "AZURE_TENANT_ID": "16b3c013-d300-468d-ac64-7eda0820b6d3"
       },
       "dotnetRunMessages": true,
       "applicationUrl": "http://localhost:5088"
@@ -16,7 +18,9 @@
       "launchUrl": "swagger",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development",
-        "Speech2TextDeploymentName": "whisper"
+        "Speech2TextDeploymentName": "whisper",
+        "AZURE_CLIENT_ID": "47f2a66f-6bd6-4b3f-917a-734ae022a276",
+        "AZURE_TENANT_ID": "16b3c013-d300-468d-ac64-7eda0820b6d3"
       },
       "dotnetRunMessages": true,
       "applicationUrl": "https://localhost:7153;http://localhost:5088",
