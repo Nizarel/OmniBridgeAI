@@ -70,7 +70,7 @@ static class ProgramExtensions
             {
                 return new CosmosDbService(
                     endpoint: cosmosDbOptions.Value?.Endpoint ?? String.Empty,
-                    key: cosmosDbOptions.Value?.Key ?? String.Empty,
+                    //key: cosmosDbOptions.Value?.Key ?? String.Empty,
                     databaseName: cosmosDbOptions.Value?.Database ?? String.Empty,
                     chatContainerName: cosmosDbOptions.Value?.ChatContainer ?? String.Empty,
                     cacheContainerName: cosmosDbOptions.Value?.CacheContainer ?? String.Empty
