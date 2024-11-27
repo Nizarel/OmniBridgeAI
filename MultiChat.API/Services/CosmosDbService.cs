@@ -1,5 +1,5 @@
-﻿//using Azure.Core;
-//using Azure.Identity;
+﻿using Azure.Core;
+using Azure.Identity;
 using MultiChat.API.Models;
 using Microsoft.Azure.Cosmos;
 using Microsoft.Azure.Cosmos.Fluent;
@@ -26,10 +26,10 @@ public class CosmosDbService
     /// <remarks>
     /// This constructor will validate credentials and create a service client instance.
     /// </remarks>
-    public CosmosDbService(string endpoint, string key, string databaseName, string chatContainerName, string cacheContainerName)
+    public CosmosDbService(string endpoint, string databaseName, string chatContainerName, string cacheContainerName)
     {
         ArgumentNullException.ThrowIfNullOrEmpty(endpoint);
-        ArgumentNullException.ThrowIfNullOrEmpty(key);
+        //ArgumentNullException.ThrowIfNullOrEmpty(key);
         ArgumentNullException.ThrowIfNullOrEmpty(databaseName);
         ArgumentNullException.ThrowIfNullOrEmpty(chatContainerName);
         ArgumentNullException.ThrowIfNullOrEmpty(cacheContainerName);
@@ -39,10 +39,11 @@ public class CosmosDbService
             PropertyNamingPolicy = CosmosPropertyNamingPolicy.CamelCase
         };
 
-        //TokenCredential credential = new DefaultAzureCredential();
+        TokenCredential credential = new DefaultAzureCredential();
 
-        //CosmosClient client = new CosmosClientBuilder(endpoint, credential)
-        CosmosClient client = new CosmosClientBuilder(endpoint, key)
+        //CosmosClient client = new CosmosClientBuilder(endpoint, key)
+
+        CosmosClient client = new CosmosClientBuilder(endpoint, credential)
             .WithSerializerOptions(options)
             .Build();
 
