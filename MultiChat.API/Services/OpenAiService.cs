@@ -1,5 +1,7 @@
 ﻿using Azure;
 using Azure.AI.OpenAI;
+using Azure.Core;
+using Azure.Identity;
 using Microsoft.CognitiveServices.Speech;
 using Microsoft.CognitiveServices.Speech.Audio;
 using Microsoft.SemanticKernel;
@@ -30,10 +32,9 @@ public class OpenAiService
     /// Creates a new instance of the service.
     /// This constructor will validate credentials and create a HTTP client instance.
 
-    public OpenAiService(string endpoint, string key, string completionDeploymentName, string embeddingDeploymentName, string Speech2TextDeploymentName)
+    public OpenAiService(string endpoint, string completionDeploymentName, string embeddingDeploymentName, string Speech2TextDeploymentName)
     {
         ArgumentNullException.ThrowIfNullOrEmpty(endpoint);
-        ArgumentNullException.ThrowIfNullOrEmpty(key);
         ArgumentNullException.ThrowIfNullOrEmpty(completionDeploymentName);
         ArgumentNullException.ThrowIfNullOrEmpty(embeddingDeploymentName);
         ArgumentNullException.ThrowIfNullOrEmpty(Speech2TextDeploymentName);
@@ -42,8 +43,10 @@ public class OpenAiService
         _embeddingDeploymentName = embeddingDeploymentName;
         _Speech2TextDeploymentName = Speech2TextDeploymentName;
 
+        TokenCredential credential = new DefaultAzureCredential();
 
-        _client = new(new Uri(endpoint), new AzureKeyCredential(key));
+
+        _client = new OpenAIClient(new Uri(endpoint), credential);
     }
 
 

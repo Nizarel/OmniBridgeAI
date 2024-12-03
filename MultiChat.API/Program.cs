@@ -88,7 +88,6 @@ static class ProgramExtensions
             {
                 return new OpenAiService(
                     endpoint: openAiOptions.Value?.Endpoint ?? String.Empty,
-                    key: openAiOptions.Value?.Key ?? String.Empty,
                     completionDeploymentName: openAiOptions.Value?.CompletionDeploymentName ?? String.Empty,
                     embeddingDeploymentName: openAiOptions.Value?.EmbeddingDeploymentName ?? String.Empty,
                     Speech2TextDeploymentName: openAiOptions.Value?.Speech2TextDeploymentName ?? String.Empty
@@ -108,7 +107,6 @@ static class ProgramExtensions
             {
                 return new SemanticKernelService(
                     endpoint: semanticKernalOptions.Value?.Endpoint ?? String.Empty,
-                    key: semanticKernalOptions.Value?.Key ?? String.Empty,
                     completionDeploymentName: semanticKernalOptions.Value?.CompletionDeploymentName ?? String.Empty,
                     embeddingDeploymentName: semanticKernalOptions.Value?.EmbeddingDeploymentName ?? String.Empty,
                     Speech2TextDeploymentName: semanticKernalOptions.Value?.Speech2TextDeploymentName ?? String.Empty

@@ -1,3 +1,5 @@
+using Azure.Core;
+using Azure.Identity;
 using Microsoft.SemanticKernel;
 using Microsoft.SemanticKernel.ChatCompletion;
 using Microsoft.SemanticKernel.Plugins.Core;
@@ -43,20 +45,21 @@ namespace MultiChat.API.Services
 
         /// This constructor will validate credentials and create a Semantic Kernel instance.
   
-        public SemanticKernelService(string endpoint, string key, string completionDeploymentName, string embeddingDeploymentName, string Speech2TextDeploymentName)
+        public SemanticKernelService(string endpoint, string completionDeploymentName, string embeddingDeploymentName, string Speech2TextDeploymentName)
         {
             ArgumentNullException.ThrowIfNullOrEmpty(endpoint);
-            ArgumentNullException.ThrowIfNullOrEmpty(key);
             ArgumentNullException.ThrowIfNullOrEmpty(completionDeploymentName);
             ArgumentNullException.ThrowIfNullOrEmpty(embeddingDeploymentName);
             ArgumentNullException.ThrowIfNullOrEmpty(Speech2TextDeploymentName);
+
+            TokenCredential credential = new DefaultAzureCredential();
             
 
             // Initialize the Semantic Kernel
             var builder = Kernel.CreateBuilder()
-                .AddAzureOpenAIChatCompletion(completionDeploymentName, endpoint, key)
-                .AddAzureOpenAIAudioToText(Speech2TextDeploymentName, endpoint, key)
-                .AddAzureOpenAITextEmbeddingGeneration(embeddingDeploymentName, endpoint, key);
+                .AddAzureOpenAIChatCompletion(completionDeploymentName, endpoint, credential)
+                .AddAzureOpenAIAudioToText(Speech2TextDeploymentName, endpoint, credential)
+                .AddAzureOpenAITextEmbeddingGeneration(embeddingDeploymentName, endpoint, credential);
 
 
             builder.Plugins.AddFromType<TimePlugin>();
