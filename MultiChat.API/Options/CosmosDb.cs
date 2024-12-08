@@ -9,4 +9,8 @@ public record CosmosDb
     public required string ChatContainer { get; init; }
 
     public required string CacheContainer { get; init; }
+
+    public required string ProductContainer { get; init; }
+    public required string ProductDataSourceURI { get; init; }
+
 };

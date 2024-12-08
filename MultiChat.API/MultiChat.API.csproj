@@ -7,19 +7,27 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Azure.Identity" Version="1.12.1" />    
+    <PackageReference Include="Aspire.Azure.AI.OpenAI" Version="9.0.0-preview.5.24551.3" />
+    <PackageReference Include="Aspire.Microsoft.Azure.Cosmos" Version="9.0.0" />
+    <PackageReference Include="Azure.AI.Inference" Version="1.0.0-beta.2" />
+    <PackageReference Include="Azure.Identity" Version="1.13.1" />    
     <PackageReference Include="Azure.Maps.Search" Version="1.0.0-beta.5" />
-    <PackageReference Include="Microsoft.Azure.Cosmos" Version="3.45.0-preview.0" />
+    <PackageReference Include="Microsoft.Azure.Cosmos" Version="3.47.0-preview.0" />
     <PackageReference Include="Microsoft.CognitiveServices.Speech" Version="1.40.0" />
+    <PackageReference Include="Microsoft.Extensions.VectorData.Abstractions" Version="9.0.0-preview.1.24523.1" />
     <PackageReference Include="Microsoft.Identity.Client" Version="4.66.2" />
     <PackageReference Include="Microsoft.ML.Tokenizers" Version="0.22.0-preview.24179.1" />
-    <PackageReference Include="Azure.AI.OpenAI" Version="1.0.0-beta.17" />
-    <PackageReference Include="Microsoft.SemanticKernel" Version="1.17.1" />
-    <PackageReference Include="Microsoft.SemanticKernel.Plugins.Core" Version="1.17.1-alpha" />
+    <PackageReference Include="Azure.AI.OpenAI" Version="2.1.0-beta.2" />
+    <PackageReference Include="Microsoft.SemanticKernel" Version="1.30.0" />
+    <PackageReference Include="Microsoft.SemanticKernel.Connectors.AzureCosmosDBNoSQL" Version="1.30.0-preview" />
+    <PackageReference Include="Microsoft.SemanticKernel.Plugins.Core" Version="1.31.0-alpha" />
     <PackageReference Include="SkiaSharp" Version="2.88.8" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.6.2" />
   </ItemGroup>
-
-
+  <PropertyGroup>
+    <NoWarn>$(NoWarn);SKEXP0001,SKEXP0010,SKEXP0020</NoWarn>
+    <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+    <DockerfileContext>.</DockerfileContext>
+  </PropertyGroup>
 
 </Project>

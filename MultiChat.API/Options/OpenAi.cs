@@ -11,4 +11,8 @@ public record OpenAi
     public required string EmbeddingDeploymentName { get; init; }
 
     public required string Speech2TextDeploymentName { get; init; }
+
+    public required string MaxRagTokens { get; init; }
+
+    public required string MaxContextTokens { get; init; }
 }
