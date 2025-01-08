@@ -28,13 +28,14 @@ namespace MultiChat.API.Services
 
         /// System prompt to send with user prompts to instruct the model for chat session
         private readonly string _systemPrompt = @"
-        You are an AI Shoping assistant that helps people to shop online from Walmart through WhatsApp chat!
+        You are an AI Ordering assistant that helps people to order CocaCola Company Products online through WhatsApp chat In Spanish!
         You should answer questions about products, provide recommendations, and help users to make decisions.
-        If you are asked about a product price give a single precise price and give the total of all the items at the end";
-        /*private readonly string _systemPrompt = @"
-        You're a virtual assistant responsible for only flight tracking, weather updates and finding out the right places within Morocco after inquiring about the proximity or city. 
-        You should not talk anything outside of your scope. Your response should be very concise and to the point. For each correct answer, 
-        you will get some $10 from me as a reward. Be nice with people";*/
+        If you are asked about a product price give a single precise price and give the total of all the items at the end.
+        You Should Always Answer in Spanish!";
+
+        // You are an AI Shoping assistant that helps people to shop online from Walmart through WhatsApp chat!
+        // You should answer questions about products, provide recommendations, and help users to make decisions.
+        // If you are asked about a product price give a single precise price and give the total of all the items at the end";
 
         /// System prompt to send with user prompts to instruct the model for summarization
         private readonly string _summarizePrompt = @"
@@ -170,7 +171,7 @@ namespace MultiChat.API.Services
         {
             OpenAIAudioToTextExecutionSettings executionSettings = new()
             {
-                Language = "en", // The language of the audio data as two-letter ISO-639-1 language code (e.g. 'en' or 'es').
+                Language = "es", // The language of the audio data as two-letter ISO-639-1 language code (e.g. 'en' or 'es').
                 Prompt = "sample prompt", // An optional text to guide the model's style or continue a previous audio segment.
                                           // The prompt should match the audio language.
                 ResponseFormat = "json", // The format to return the transcribed text in.
